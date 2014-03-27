@@ -1,0 +1,18 @@
+Metadata-Version: 1.0
+Name: pynessus-rest
+Version: 0.1
+Summary: Client for the Rest-API features in Nessus.
+Home-page: http://packages.python.org/pynessus-rest
+Author: Adastra
+Author-email: debiadastra@gmail.com
+License: GNU/GPL
+Description: pynessus-rest
+        =============
+        
+        Python Library to use the implementation of the REST protocol of Tenable’s Nessus scanner. You can use Nessus from your scripts easily!
+        
+Keywords: python nessus rest
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Topic :: Utilities
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
