@@ -25,7 +25,7 @@ from pynessus.rest.client.NessusClient import NessusClient
 from pynessus.rest.data.NessusStructure import NessusStructure, NessusConverter
 
 from pprint import pprint
-
+from bs4 import BeautifulSoup
 if __name__ == "__main__":
     client = NessusClient('127.0.0.1','8834')
     client.login('adastra','peraspera')
@@ -37,6 +37,17 @@ if __name__ == "__main__":
     client.
     '''
     # filter0Quality, filterSearchType, filter0Value, filter0Filter
-    #pprint(client.pluginsAttributesFamilySearch('match','or','modicon','description'))
-    #pprint(client.pluginsAttributesPluginSearch('match','or','modicon','description','FTP'))
-    pprint(client.pluginsMd5())
+    pprint(client.pluginsAttributesFamilySearch('match','or','modicon','description'))
+    #print(client.pluginsAttributesPluginSearch('match','or','modicon','description','FTP'))
+
+    pprint(client.policyList())
+    #contents = client.policyDownload(1)
+    #print contents
+    #print client.policyFileUpload("tested.nessus", contents)
+    #print client.policyFilePolicyImport("tested.nessus")
+    #print client.scanNew("127.0.0.1",'1','testScan')
+    #print client.scanStop('ec665c9e-ce24-336b-acb4-e2b199fac1800854abce5c111a8d')
+    #scanList =  client.scanList(jsonFormat=True)
+    #print  client.scanTimeZones()
+
+
