@@ -412,7 +412,7 @@ class NessusClient:
         content = self.requestNessus(self.url+self.nessusFunctions['scan_resume'])
         return content
 
-    def scanList(self, jsonFormat=True, method="GET"):
+    def scanList(self, jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['scan_list'], method=method)
         return content

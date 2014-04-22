@@ -129,7 +129,7 @@ class NessusClient:
         self.body.update(params)
         self.headers.update(headers)
 
-    def requestNessus(self, url, method="GET"):
+    def requestNessus(self, url, method="POST"):
         '''
         Perform a request to Nessus server using the data and headers received by parameter.
         This function automatically increments the sequence identifier for Nessus requests.
@@ -150,8 +150,6 @@ class NessusClient:
         '''
         self.constructParamsAndHeaders(params={'login':nessusUser, 'password':nessusPassword}, jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['login'], method="POST")
-        print content
-
         if content['reply']['status'] == 'OK':
             self.token = content['reply']['contents']['token']
         return content
@@ -174,17 +172,17 @@ class NessusClient:
         content = self.requestNessus(self.url+self.nessusFunctions['feed'], method=method)
         return content
 
-    def securesettingsList(self,jsonFormat=True, method="GET"):
+    def securesettingsList(self,jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['server_securesettings_list'], method=method)
         return content
 
-    def secureSettings(self,jsonFormat=True, method="GET"):
+    def secureSettings(self,jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['server_securesettings'], method=method)
         return content
 
-    def serverPreferencesList(self,jsonFormat=True, method="GET"):
+    def serverPreferencesList(self,jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['server_preferences_list'], method=method)
         return content
@@ -206,12 +204,12 @@ class NessusClient:
         content = self.requestNessus(self.url+self.nessusFunctions['server_register'], method=method)
         return content
 
-    def serverLoad(self,jsonFormat=True, method="GET"):
+    def serverLoad(self,jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['server_load'], method=method)
         return content
 
-    def serverUuid(self,jsonFormat=True, method="GET"):
+    def serverUuid(self,jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['server_uuid'], method=method)
         return content
@@ -221,7 +219,7 @@ class NessusClient:
         content = self.requestNessus(self.url+self.nessusFunctions['server_getcert'], method=method)
         return content
 
-    def serverPluginsProcess(self,jsonFormat=True, method="GET"):
+    def serverPluginsProcess(self,jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['server_plugins_process'], method=method)
         return content
@@ -247,8 +245,8 @@ class NessusClient:
             adminUser = 1
         self.constructParamsAndHeaders(params={'login':login,
                                                'password':password,
-                                               'admin':adminUser}, jsonFormat=jsonFormat, method=method)
-        content = self.requestNessus(self.url+self.nessusFunctions['users_edit'])
+                                               'admin':adminUser}, jsonFormat=jsonFormat)
+        content = self.requestNessus(self.url+self.nessusFunctions['users_edit'], method=method)
         return content
 
     def usersChpasswd(self,login,password,jsonFormat=True, method="POST"):
@@ -257,7 +255,7 @@ class NessusClient:
         content = self.requestNessus(self.url+self.nessusFunctions['users_chpasswd'], method=method)
         return content
 
-    def usersList(self,jsonFormat=True, method="GET"):
+    def usersList(self,jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['users_list'], method=method)
         return content
@@ -272,7 +270,7 @@ class NessusClient:
         content = self.requestNessus(self.url+self.nessusFunctions['plugins_attributes_list'], method=method)
         return content
 
-    def pluginsListFamily(self, pluginFamily, jsonFormat=True, method="GET"):
+    def pluginsListFamily(self, pluginFamily, jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(params={'family':pluginFamily}, jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['plugins_list_family'], method=method)
         return content
@@ -282,7 +280,7 @@ class NessusClient:
         content = self.requestNessus(self.url+self.nessusFunctions['plugins_description'], method=method)
         return content
 
-    def pluginsPreferences(self,jsonFormat=True, method="GET"):
+    def pluginsPreferences(self,jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['plugins_preferences'], method=method)
         return content
@@ -321,7 +319,7 @@ class NessusClient:
         content = self.requestNessus(self.url+self.nessusFunctions['plugins_descriptions'], method=method)
         return content
 
-    def policyPreferencesList(self,jsonFormat=True, method="GET"):
+    def policyPreferencesList(self,jsonFormat=True, method="POST"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
         content = self.requestNessus(self.url+self.nessusFunctions['policy_preferences_list'], method=method)
         return content
@@ -414,9 +412,9 @@ class NessusClient:
         content = self.requestNessus(self.url+self.nessusFunctions['scan_resume'])
         return content
 
-    def scanList(self, jsonFormat=True):
+    def scanList(self, jsonFormat=True, method="GET"):
         self.constructParamsAndHeaders(jsonFormat=jsonFormat)
-        content = self.requestNessus(self.url+self.nessusFunctions['scan_list'])
+        content = self.requestNessus(self.url+self.nessusFunctions['scan_list'], method=method)
         return content
 
     def scanTimeZones(self, jsonFormat=True):

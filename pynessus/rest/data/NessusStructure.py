@@ -578,7 +578,7 @@ class NessusConverter():
             self.nessusStructure.scan = nessusScan
 
     def scanListToStructure(self):
-        if self.bs.status.text == 'OK':
+        '''if self.bs.status.text == 'OK':
             scans = self.bs.find_all("scan")
             for scan in scans:
                 nessusScan = NessusScan()
@@ -600,6 +600,28 @@ class NessusConverter():
                     nessusPolicy.policyComments = policy.policycomments.text
                     nessusScan.scanPolicies.append(nessusPolicy)
                 self.nessusStructure.scanList.append(nessusScan)
+        '''
+        if self.data['reply']['contents'].has_key('scans'):
+            if self.data['reply']['contents']['scans'].has_key('scanlist'):
+                for scan in self.data['reply']['contents']['scans']['scanlist']['scan']:
+                    nessusScan = NessusScan()
+                    if scan.has_key('status'):
+                        nessusScan.status = scan['status']
+                    if scan.has_key('readablename'):
+                        nessusScan.readablename = scan['readablename']
+                    if scan.has_key('uuid'):
+                        nessusScan.uuid = scan['uuid']
+                    if scan.has_key('completion_current'):
+                        nessusScan.uuid = scan['completion_current']
+                    if scan.has_key('completion_total'):
+                        nessusScan.uuid = scan['completion_total']
+                    if scan.has_key('start_time'):
+                        nessusScan.startTime = scan['start_time']
+                    if scan.has_key('owner'):
+                        nessusScan.owner = scan['owner']
+                    if scan.has_key('scan_name'):
+                        nessusScan.scanName = scan['scan_name']
+                    self.nessusStructure.scanList.append(nessusScan)
 
     def scanTimeZoneToStructure(self):
         if self.data['reply']['contents'].has_key('timezones'):
@@ -822,8 +844,8 @@ class NessusConverter():
                         self.nessusStructure.nessusTags.append(nessusTag)
                 else:
                     nessusTag = NessusTag()
-                    nessusTag.name = tag['name']
-                    nessusTag.value = tag['value']
+                    nessusTag.name = self.data['reply']['contents']['tags']['tag']['name']
+                    nessusTag.value = self.data['reply']['contents']['tags']['tag']['value']
                     self.nessusStructure.nessusTags.append(nessusTag)
 
     def auditTrailToStructure(self):

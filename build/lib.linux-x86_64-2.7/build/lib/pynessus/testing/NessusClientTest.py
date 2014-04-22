@@ -36,8 +36,7 @@ if __name__ == "__main__":
     print "\n\n"
     client.
     '''
-    print client.feed(method="POST")
-    client.user
+    #print client.feed(method="POST")
     # filter0Quality, filterSearchType, filter0Value, filter0Filter
     #pprint(client.pluginsAttributesFamilySearch('match','or','modicon','description'))
     #print(client.pluginsAttributesPluginSearch('match','or','modicon','description','FTP'))
@@ -82,6 +81,7 @@ if __name__ == "__main__":
     #pprint(client.reportAttributesList("2e8ed9f5-79b5-4f60-d223-bc08e9688c79a606b97c670a7deb"))
     #pprint(client.report2Vulnerabilities("2e8ed9f5-79b5-4f60-d223-bc08e9688c79a606b97c670a7deb"))
 
+    '''
     nessusConverter = NessusConverter(client.policyList(method="POST"))
     nessusConverter.policyStructureToStructure()
     for policy in nessusConverter.nessusStructure.nessusPolicies:
@@ -93,6 +93,7 @@ if __name__ == "__main__":
         print report.name +' - '+ report.status
 
     '''
+    '''
     nessusConverter = NessusConverter(client.reportAttributesList("2e8ed9f5-79b5-4f60-d223-bc08e9688c79a606b97c670a7deb"))
     nessusConverter.reportAttributesToStructure()
     for reportAttribute in nessusConverter.nessusStructure.nessusReportAttributes:
@@ -103,6 +104,11 @@ if __name__ == "__main__":
     for tag in nessusConverter.nessusStructure.nessusTags:
         print tag.name +' - '+ tag.value
     '''
+    #pprint(client.policyList())
+    #print client.scanNew('127.0.0.1','-1','NewScan')
+    #print client.scanList()
+    #nessusConverter = NessusConverter(client.scanList(method="GET"))
+    #nessusConverter.scanListToStructure()
 
-
-
+    #print client.reportHosts('0e6a1173-6134-caf0-7d95-09d2df26fc103e68d46e245b67af')
+    print client.reportTags('76e22055-7b3b-31da-013b-eb4afd49085608524ae4f4887e40','176.10.140.226')

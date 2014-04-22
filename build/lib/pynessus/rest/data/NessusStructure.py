@@ -30,7 +30,7 @@ class NessusConverter():
     def __init__(self, data):
         self.data = data
         self.nessusStructure = NessusStructure()
-        if isinstance(data, str):
+        if isinstance(self.data, str):
             self.bs = BeautifulSoup(data,"lxml")
 
 
@@ -144,7 +144,7 @@ class NessusConverter():
 
     def userToStructure(self):
         if self.data['reply']['contents'].has_key('users'):
-            for user in self.data['reply']['contents']['user']:
+            for user in self.data['reply']['contents']['users']['user']:
                 nessusUser = NessusUser()
                 if user.has_key('name'):
                     nessusUser.name = user['name']
@@ -186,20 +186,20 @@ class NessusConverter():
                     if attribute.has_key('name'):
                         pluginAttribute.name = attribute['name']
                     if attribute.has_key('readable_name'):
-                        pluginAttribute.name = attribute['readable_name']
+                        pluginAttribute.readableName = attribute['readable_name']
 
 
                     if attribute.has_key('control'):
                         control = NessusPluginAttributeControl()
                         if attribute['control'].has_key('readable_regex'):
-                            control.readableRegex = self.data['reply']['contents']['pluginsattributes']['attribute']['control']['readable_regex']
+                            control.readableRegex = attribute['control']['readable_regex']
                         if attribute['control'].has_key('regex'):
-                            control.regex = self.data['reply']['contents']['pluginsattributes']['attribute']['control']['regex']
+                            control.regex = attribute['control']['regex']
                         if attribute['control'].has_key('type'):
-                            control.type = self.data['reply']['contents']['pluginsattributes']['attribute']['control']['type']
+                            control.type = attribute['control']['type']
                         if attribute['control'].has_key('list'):
-                            control.list = self.data['reply']['contents']['pluginsattributes']['attribute']['control']['list']['entry']
-                        pluginAttribute.controls.append(control)
+                            control.list = attribute['control']['list']['entry']
+                        pluginAttribute.control = control
                     if attribute.has_key('operators'):
                         pluginAttribute.operators = attribute['operators']['operator']
                     self.nessusStructure.pluginsAttributes.append(pluginAttribute)
@@ -221,8 +221,16 @@ class NessusConverter():
 
     def pluginsDescriptionToStructure(self):
         if self.data['reply']['contents'].has_key('plugindescription'):
+            pluginsDescription = NessusPluginsDescription()
+            if self.data['reply']['contents']['plugindescription'].has_key('pluginfamily'):
+                pluginsDescription.pluginFamily = self.data['reply']['contents']['plugindescription']['pluginfamily']
+            if self.data['reply']['contents']['plugindescription'].has_key('pluginid'):
+                pluginsDescription.pluginId = self.data['reply']['contents']['plugindescription']['pluginid']
+            if self.data['reply']['contents']['plugindescription'].has_key('pluginname'):
+                pluginsDescription.pluginName = self.data['reply']['contents']['plugindescription']['pluginname']
+
+
             if self.data['reply']['contents']['plugindescription'].has_key('pluginattributes'):
-                pluginsDescription = NessusPluginsDescription()
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('bid'):
                     pluginsDescription.bid = self.data['reply']['contents']['plugindescription']['pluginattributes']['bid']
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('cpe'):
@@ -238,13 +246,13 @@ class NessusConverter():
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('cvss_vector'):
                     pluginsDescription.cvssVector = self.data['reply']['contents']['plugindescription']['pluginattributes']['cvss_vector']
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('description'):
-                    pluginsDescription.description = self.data['reply']['contents']['plugindescription']['pluginattributes']['descriptor']
+                    pluginsDescription.description = self.data['reply']['contents']['plugindescription']['pluginattributes']['description']
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('exploit_available'):
                     pluginsDescription.exploitAvailable = self.data['reply']['contents']['plugindescription']['pluginattributes']['exploit_available']
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('exploitability_ease'):
                     pluginsDescription.exploitabilityEase = self.data['reply']['contents']['plugindescription']['pluginattributes']['exploitability_ease']
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('patch_publication_date'):
-                    pluginsDescription.pluginPublicationDate = self.data['reply']['contents']['plugindescription']['pluginattributes']['patch_publication_date']
+                    pluginsDescription.pluginPatchDate = self.data['reply']['contents']['plugindescription']['pluginattributes']['patch_publication_date']
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('plugin_modification_date'):
                     pluginsDescription.pluginModificationDate = self.data['reply']['contents']['plugindescription']['pluginattributes']['plugin_modification_date']
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('plugin_publication_date'):
@@ -265,16 +273,8 @@ class NessusConverter():
                     pluginsDescription.synopsis = self.data['reply']['contents']['plugindescription']['pluginattributes']['synopsis']
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('vuln_publication_date'):
                     pluginsDescription.vulnPublicationDate = self.data['reply']['contents']['plugindescription']['pluginattributes']['vuln_publication_date']
-                if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('vuln_publication_date'):
-                    pluginsDescription.vulnPublicationDate = self.data['reply']['contents']['plugindescription']['pluginattributes']['vuln_publication_date']
                 if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('xref'):
                     pluginsDescription.xref = self.data['reply']['contents']['plugindescription']['pluginattributes']['xref']
-                if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('pluginfamily'):
-                    pluginsDescription.pluginFamily = self.data['reply']['contents']['plugindescription']['pluginattributes']['pluginfamily']
-                if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('pluginid'):
-                    pluginsDescription.pluginId = self.data['reply']['contents']['plugindescription']['pluginattributes']['pluginid']
-                if self.data['reply']['contents']['plugindescription']['pluginattributes'].has_key('pluginname'):
-                    pluginsDescription.pluginName = self.data['reply']['contents']['plugindescription']['pluginattributes']['pluginname']
                 self.nessusStructure.pluginsDescription = pluginsDescription
 
     def pluginsPreferencesToStructure(self):
@@ -316,7 +316,7 @@ class NessusConverter():
 
     def md5StructureToStructure(self):
          if self.data['reply']['contents'].has_key('entries'):
-             if self.data['reply']['contents']['entries'].has_hey('entry'):
+             if self.data['reply']['contents']['entries'].has_key('entry'):
                  for entry in self.data['reply']['contents']['entries']['entry']:
                      md5Entry = NessusMd5Entry()
                      if entry.has_key('filename'):
@@ -387,7 +387,7 @@ class NessusConverter():
 
     def serverPolicyPreferenceToStructure(self):
         if self.data['reply']['contents'].has_key('serverpreferences'):
-            if self.data['reply']['contents']['serverpreferences'].has_hey('preference'):
+            if self.data['reply']['contents']['serverpreferences'].has_key('preference'):
                 for preference in self.data['reply']['contents']['serverpreferences']['preference']:
                     policyPreference = NessusPolicyPreference()
                     if preference.has_key('name'):
@@ -401,18 +401,90 @@ class NessusConverter():
     def policyStructureToStructure(self):
         if self.data['reply']['contents'].has_key('policies'):
             if self.data['reply']['contents']['policies'].has_key('policy'):
-                for policy in self.data['reply']['contents']['policies']['policy']:
+                if isinstance(self.data['reply']['contents']['policies']['policy'], list):
+                    for policy in self.data['reply']['contents']['policies']['policy']:
+                        nessusPolicy = NessusPolicy()
+                        if policy.has_key('policycontents'):
+                            if policy['policycontents'].has_key('familyselection'):
+                                if policy['policycontents']['familyselection'].has_key('familyitem'):
+                                    for familyItem in policy['policycontents']['familyselection']['familyitem']:
+                                        family = NessusFamily()
+                                        if familyItem.has_key('familyname'):
+                                            family.familyName = familyItem['familyname']
+                                        if familyItem.has_key('status'):
+                                            family.familyStatus = familyItem['status']
+                                        nessusPolicy.policyFamilySelection.append(family)
+                            if policy['policycontents'].has_key('individualpluginselection'):
+                                if policy['policycontents']['individualpluginselection'].has_key('pluginitem'):
+                                    for plugin in policy['policycontents']['individualpluginselection']['pluginitem']:
+                                        nessusPlugin = NessusPlugin()
+                                        if isinstance(plugin, unicode):
+                                            nessusPlugin.pluginName = plugin
+                                        else:
+                                            if plugin.has_key('family'):
+                                                nessusPlugin.pluginFamily = plugin['family']
+                                            if plugin.has_key('pluginid'):
+                                                nessusPlugin.pluginId = plugin['pluginid']
+                                            if plugin.has_key('pluginname'):
+                                                nessusPlugin.pluginName = plugin['pluginname']
+                                            if plugin.has_key('status'):
+                                                nessusPlugin.pluginStatus = plugin['status']
+                                            nessusPolicy.individualPluginSelection.append(nessusPlugin)
+                            if policy['policycontents'].has_key('policycomments'):
+                                nessusPolicy.policyComments = policy['policycontents']['policycomments']
+                            if policy['policycontents'].has_key('policycomments'):
+                                nessusPolicy.policyComments = policy['policycontents']['policycomments']
+                            if policy['policycontents'].has_key('preferences'):
+                                if policy['policycontents']['preferences'].has_key('pluginspreferences'):
+                                    for item in policy['policycontents']['preferences']['pluginspreferences']['item']:
+                                        pluginPreference = NessusPluginPreference()
+                                        if item.has_key('fullname'):
+                                            pluginPreference.fullName = item['fullname']
+                                        if item.has_key('pluginid'):
+                                            pluginPreference.pluginId = item['pluginid']
+                                        if item.has_key('pluginname'):
+                                            pluginPreference.pluginName = item['pluginname']
+                                        if item.has_key('preferencename'):
+                                            pluginPreference.preferenceName = item['preferencename']
+                                        if item.has_key('preferencetype'):
+                                            pluginPreference.preferenceType = item['preferencetype']
+                                        if item.has_key('preferencevalues'):
+                                            pluginPreference.preferenceValues = item['preferencevalues']
+                                        nessusPolicy.pluginPreferences.append(pluginPreference)
+                            if policy['policycontents'].has_key('serverpreferences'):
+                                if policy['policycontents']['serverpreferences'].has_key('preference'):
+                                    for preference in policy['policycontents']['serverpreferences']['preference']:
+                                        policyPreference = NessusPolicyPreference()
+                                        if preference.has_key('name'):
+                                            policyPreference.name = preference['name']
+                                        if preference.has_key('value'):
+                                            policyPreference.value = preference['value']
+                                        nessusPolicy.pluginPreferences.append(policyPreference)
+
+                            if policy.has_key('policyid'):
+                                nessusPolicy.policyId = policy['policyid']
+
+                            if policy.has_key('policyname'):
+                                 nessusPolicy.policyName = policy['policyname']
+
+                            if policy.has_key('policyowner'):
+                                nessusPolicy.policyOwner = policy['policyowner']
+
+                            if policy.has_key('visibility'):
+                                nessusPolicy.policyVisibility =policy['visibility']
+                        self.nessusStructure.nessusPolicies.append(nessusPolicy)
+                else:
                     nessusPolicy = NessusPolicy()
-                    if policy.has_key('policycontents'):
-                        if policy['policycontents'].has_key('familyselection'):
-                            if policy['policycontents']['familyselection'].has_key('familyitem'):
-                                for familyItem in policy['policycontents']['familyselection']['familyitem']:
-                                    family = NessusFamily()
-                                    if familyItem.has_key('familyname'):
-                                        family.familyName = familyItem['familyname']
-                                    if familyItem.has_key('status'):
-                                        family.familyStatus = familyItem['status']
-                                    nessusPolicy.policyFamilySelection.append(family)
+                    policy = self.data['reply']['contents']['policies']['policy']
+                    if policy['policycontents'].has_key('familyselection'):
+                        if policy['policycontents']['familyselection'].has_key('familyitem'):
+                            for familyItem in policy['policycontents']['familyselection']['familyitem']:
+                                family = NessusFamily()
+                                if familyItem.has_key('familyname'):
+                                    family.familyName = familyItem['familyname']
+                                if familyItem.has_key('status'):
+                                    family.familyStatus = familyItem['status']
+                                nessusPolicy.policyFamilySelection.append(family)
                         if policy['policycontents'].has_key('individualpluginselection'):
                             if policy['policycontents']['individualpluginselection'].has_key('pluginitem'):
                                 for plugin in policy['policycontents']['individualpluginselection']['pluginitem']:
@@ -471,8 +543,7 @@ class NessusConverter():
 
                         if policy.has_key('visibility'):
                             nessusPolicy.policyVisibility =policy['visibility']
-
-                    self.nessusStructure.nessusPolicies.append(nessusPolicy)
+                self.nessusStructure.nessusPolicies.append(nessusPolicy)
 
     def policyDeletedToStructure(self):
         if self.data['reply']['contents'].has_key('policy_id'):
@@ -488,7 +559,7 @@ class NessusConverter():
     def scanToStructure(self):
         if self.data['reply']['contents'].has_key('scan'):
             nessusScan = NessusScan()
-            if self.data['reply']['contents']['scan'].has_data('owner'):
+            if self.data['reply']['contents']['scan'].has_key('owner'):
                 nessusScan.owner = self.data['reply']['contents']['scan']['owner']
             if self.data['reply']['contents']['scan'].has_key('scan_name'):
                 nessusScan.scanName = self.data['reply']['contents']['scan']['scan_name']
@@ -511,22 +582,22 @@ class NessusConverter():
             scans = self.bs.find_all("scan")
             for scan in scans:
                 nessusScan = NessusScan()
-                nessusScan.owner = scan.owner
-                nessusScan.uuid = scan.owner
-                nessusScan.readableName = scan.readablename
-                nessusScan.startTime = scan.start_time
-                nessusScan.status = scan.status
-                nessusScan.completionCurrent = scan.completion_current
-                nessusScan.completionTotal = scan.completion_total
+                nessusScan.owner = scan.owner.text
+                nessusScan.uuid = scan.uuid.text
+                nessusScan.readableName = scan.readablename.text
+                nessusScan.startTime = scan.start_time.text
+                nessusScan.status = scan.status.text
+                nessusScan.completionCurrent = scan.completion_current.text
+                nessusScan.completionTotal = scan.completion_total.text
 
                 policies = self.bs.find_all("policy")
                 for policy in policies:
                     nessusPolicy = NessusPolicy()
-                    nessusPolicy.policyId = policy.policyid
-                    nessusPolicy.policyName = policy.policyname
-                    nessusPolicy.policyOwner = policy.policyowner
-                    nessusPolicy.policyVisibility = policy.visibility
-                    nessusPolicy.policyComments = policy.policycomments
+                    nessusPolicy.policyId = policy.policyid.text
+                    nessusPolicy.policyName = policy.policyname.text
+                    nessusPolicy.policyOwner = policy.policyowner.text
+                    nessusPolicy.policyVisibility = policy.visibility.text
+                    nessusPolicy.policyComments = policy.policycomments.text
                     nessusScan.scanPolicies.append(nessusPolicy)
                 self.nessusStructure.scanList.append(nessusScan)
 
@@ -567,13 +638,42 @@ class NessusConverter():
                     if report.has_key('timestamp'):
                         nessusReport.timestamp = report['timestamp']
                     self.nessusStructure.reportList.append(nessusReport)
+        elif self.data['reply']['status'] == 'OK':
+            self.nessusStructure.report = True
+
 
 
 
     def reportHostToStructure(self):
         if self.data['reply']['contents'].has_key('hostlist'):
             if self.data['reply']['contents']['hostlist'].has_key('host'):
-                for host in self.data['reply']['contents']['hostlist']['host']:
+                if isinstance(self.data['reply']['contents']['hostlist']['host'], list):
+                    for host in self.data['reply']['contents']['hostlist']['host']:
+                        reportHost = NessusReportHost()
+                        if host.has_key('numchecksconsidered'):
+                            reportHost.numchecksconsidered = host['numchecksconsidered']
+                        if host.has_key('scanprogresstotal'):
+                            reportHost.scanprogresstotal = host['scanprogresstotal']
+                        if host.has_key('totalchecksconsidered'):
+                            reportHost.totalchecksconsidered = host['totalchecksconsidered']
+                        if host.has_key('hostname'):
+                            reportHost.hostname = host['hostname']
+                        if host.has_key('scanprogresscurrent'):
+                            reportHost.scanprogresscurrent = host['scanprogresscurrent']
+                        if host.has_key('severity'):
+                            reportHost.severity = host['severity']
+                        if host.has_key('severitycount'):
+                            if host['severitycount'].has_key('item'):
+                                for item in host['severitycount']['item']:
+                                    nessusHostItem = NessusHostItem()
+                                    if item.has_key('severitylevel'):
+                                        nessusHostItem.severitylevel = item['severitylevel']
+                                    if item.has_key('count'):
+                                        nessusHostItem.count = item['count']
+                                    reportHost.nessusHostItems.append(nessusHostItem)
+                        self.nessusStructure.reportHosts.append(reportHost)
+                else:
+                    host = self.data['reply']['contents']['hostlist']['host']
                     reportHost = NessusReportHost()
                     if host.has_key('numchecksconsidered'):
                         reportHost.numchecksconsidered = host['numchecksconsidered']
@@ -585,18 +685,18 @@ class NessusConverter():
                         reportHost.hostname = host['hostname']
                     if host.has_key('scanprogresscurrent'):
                         reportHost.scanprogresscurrent = host['scanprogresscurrent']
-                    if self.data['reply']['contents']['hostlist']['host'].has_key('severity'):
-                        reportHost.severity = self.data['reply']['contents']['hostlist']['host']['severity']
-                    if self.data['reply']['contents']['hostlist']['host'].has_key('severitycount'):
-                        if self.data['reply']['contents']['hostlist']['host']['severitycount'].has_key('item'):
-                            for item in self.data['reply']['contents']['hostlist']['host']['severitycount']['item']:
+                    if host.has_key('severity'):
+                        reportHost.severity = host['severity']
+                    if host.has_key('severitycount'):
+                        if host['severitycount'].has_key('item'):
+                            for item in host['severitycount']['item']:
                                 nessusHostItem = NessusHostItem()
                                 if item.has_key('severitylevel'):
                                     nessusHostItem.severitylevel = item['severitylevel']
                                 if item.has_key('count'):
                                     nessusHostItem.count = item['count']
                                 reportHost.nessusHostItems.append(nessusHostItem)
-                    self.nessusStructure.reportHost = reportHost
+                    self.nessusStructure.reportHosts.append(reportHost)
 
     def report2HostsPluginToStructure(self):
         if self.data['reply']['contents'].has_key('hostList') and self.data['reply']['contents']['hostList'] is None:
@@ -629,7 +729,29 @@ class NessusConverter():
     def reportPortToStructure(self):
         if self.data['reply']['contents'].has_key('portlist'):
             if self.data['reply']['contents']['portlist'].has_key('port'):
-                for port in self.data['reply']['contents']['portlist']['port']:
+                if isinstance(self.data['reply']['contents']['portlist']['port'], list):
+                    for port in self.data['reply']['contents']['portlist']['port']:
+                        reportPort = NessusReportPort()
+                        if port.has_key('portnum'):
+                            reportPort.portNumber = port['portnum']
+                        if port.has_key('protocol'):
+                            reportPort.protocol = port['protocol']
+                        if port.has_key('severity'):
+                            reportPort.severity = port['severity']
+                        if port.has_key('svcName'):
+                            reportPort.svcName = port['svcName']
+                        if port.has_key('severitycount'):
+                            if port['severitycount'].has_key('item'):
+                                for item in port['severitycount']['item']:
+                                    nessusHostItem = NessusHostItem()
+                                    if item.has_key('severitylevel'):
+                                        nessusHostItem.severitylevel = item['severitylevel']
+                                    if item.has_key('count'):
+                                        nessusHostItem.count = item['count']
+                                    reportPort.nessusHostItems.append(nessusHostItem)
+                        self.nessusStructure.reportPortList.append(reportPort)
+                else:
+                    port = self.data['reply']['contents']['portlist']['port']
                     reportPort = NessusReportPort()
                     if port.has_key('portnum'):
                         reportPort.portNumber = port['portnum']
@@ -673,7 +795,7 @@ class NessusConverter():
                         reportPortDetail.cpe = self.data['reply']['contents']['portDetails']['ReportItem']['data']['cpe']
                     if self.data['reply']['contents']['portDetails']['ReportItem']['data'].has_key('cve'):
                         reportPortDetail.cve = self.data['reply']['contents']['portDetails']['ReportItem']['data']['cve']
-                    if self.data['reply']['contents']['portDetails']['ReportItem']['data'].has_hey('cvss_base_score'):
+                    if self.data['reply']['contents']['portDetails']['ReportItem']['data'].has_key('cvss_base_score'):
                         reportPortDetail.cvss_base_score = self.data['reply']['contents']['portDetails']['ReportItem']['data']['cvss_base_score']
                     if self.data['reply']['contents']['portDetails']['ReportItem']['data'].has_key('cvss_temporal_score'):
                         reportPortDetail.cvss_temporal_score = self.data['reply']['contents']['portDetails']['ReportItem']['data']['cvss_temporal_score']
@@ -691,11 +813,18 @@ class NessusConverter():
 
     def tagToNessusStructure(self):
         if self.data['reply']['contents'].has_key('tags'):
-            for tag in self.data['reply']['contents']['tags']:
-                nessusTag = NessusTag()
-                nessusTag.name = tag['tag']['name']
-                nessusTag.value = tag['tag']['value']
-                self.nessusStructure.nessusTags.append(nessusTag)
+            if self.data['reply']['contents']['tags'].has_key('tag'):
+                if isinstance(self.data['reply']['contents']['tags']['tag'],list):
+                    for tag in self.data['reply']['contents']['tags']['tag']:
+                        nessusTag = NessusTag()
+                        nessusTag.name = tag['name']
+                        nessusTag.value = tag['value']
+                        self.nessusStructure.nessusTags.append(nessusTag)
+                else:
+                    nessusTag = NessusTag()
+                    nessusTag.name = tag['name']
+                    nessusTag.value = tag['value']
+                    self.nessusStructure.nessusTags.append(nessusTag)
 
     def auditTrailToStructure(self):
         if self.data['reply']['contents'].has_key('hasaudittrail'):
@@ -794,7 +923,7 @@ class NessusStructure():
         self.scanTimeZonesList = []
         self.nessusScanTemplate = None
         self.report = None
-        self.reportHost = None
+        self.reportHosts = []
         self.reportList = []
         self.report2Host = None
         self.report2HostPlugin = None
@@ -872,7 +1001,7 @@ class NessusPluginsDescription():
         self.exploitabilityEase = None
         self.patchPublicationDate = None
         self.pluginModificationDate = None
-        self.pluginPublicationDate = None
+        self.pluginPatchDate = None
         self.pluginType = None
         self.pluginVersion = None
         self.riskFactor = None
@@ -915,7 +1044,7 @@ class NessusPluginAttribute():
     def __init__(self):
         self.name = None
         self.readableName = None
-        self.controls = []
+        self.controls = None
         self.operators = [] #List of str objects.
 
 
