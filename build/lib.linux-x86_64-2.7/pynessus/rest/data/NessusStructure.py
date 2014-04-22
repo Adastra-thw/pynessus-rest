@@ -557,6 +557,7 @@ class NessusConverter():
             self.nessusStructure.fileUploaded = self.data['reply']['contents']['fileuploaded']
 
     def scanToStructure(self):
+        print self.data
         if self.data['reply']['contents'].has_key('scan'):
             nessusScan = NessusScan()
             if self.data['reply']['contents']['scan'].has_key('owner'):
@@ -604,24 +605,25 @@ class NessusConverter():
         if self.data['reply']['contents'].has_key('scans'):
             if self.data['reply']['contents']['scans'].has_key('scanlist'):
                 for scan in self.data['reply']['contents']['scans']['scanlist']['scan']:
-                    nessusScan = NessusScan()
-                    if scan.has_key('status'):
-                        nessusScan.status = scan['status']
-                    if scan.has_key('readablename'):
-                        nessusScan.readablename = scan['readablename']
-                    if scan.has_key('uuid'):
-                        nessusScan.uuid = scan['uuid']
-                    if scan.has_key('completion_current'):
-                        nessusScan.uuid = scan['completion_current']
-                    if scan.has_key('completion_total'):
-                        nessusScan.uuid = scan['completion_total']
-                    if scan.has_key('start_time'):
-                        nessusScan.startTime = scan['start_time']
-                    if scan.has_key('owner'):
-                        nessusScan.owner = scan['owner']
-                    if scan.has_key('scan_name'):
-                        nessusScan.scanName = scan['scan_name']
-                    self.nessusStructure.scanList.append(nessusScan)
+                    if isinstance(scan, dict):
+                        nessusScan = NessusScan()
+                        if scan.has_key('status'):
+                            nessusScan.status = scan['status']
+                        if scan.has_key('readablename'):
+                            nessusScan.readablename = scan['readablename']
+                        if scan.has_key('uuid'):
+                            nessusScan.uuid = scan['uuid']
+                        if scan.has_key('completion_current'):
+                            nessusScan.uuid = scan['completion_current']
+                        if scan.has_key('completion_total'):
+                            nessusScan.uuid = scan['completion_total']
+                        if scan.has_key('start_time'):
+                            nessusScan.startTime = scan['start_time']
+                        if scan.has_key('owner'):
+                            nessusScan.owner = scan['owner']
+                        if scan.has_key('scan_name'):
+                            nessusScan.scanName = scan['scan_name']
+                        self.nessusStructure.scanList.append(nessusScan)
 
     def scanTimeZoneToStructure(self):
         if self.data['reply']['contents'].has_key('timezones'):
