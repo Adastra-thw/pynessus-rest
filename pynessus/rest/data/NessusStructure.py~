@@ -399,7 +399,7 @@ class NessusConverter():
 
 
     def policyStructureToStructure(self):
-        if self.data['reply']['contents'].has_key('policies') and self.data['reply']['contents']['policies'] != None:
+        if self.data['reply']['contents'].has_key('policies'):
             if self.data['reply']['contents']['policies'].has_key('policy'):
                 if isinstance(self.data['reply']['contents']['policies']['policy'], list):
                     for policy in self.data['reply']['contents']['policies']['policy']:
