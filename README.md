@@ -14,7 +14,7 @@ Some examples to use pynessus-rest.
 ```
 from pynessus.rest.client.NessusClient import NessusClient
 client = NessusClient('127.0.0.1','8834')
-client.login('adastra','peraspera')
+client.login('adastra','adastra')
 ```
 
 * Print the Nessus Feed.
