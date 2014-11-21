@@ -67,7 +67,7 @@ class NessusClient:
                                 'plugins_md5':'/plugins/md5',
                                 'plugins_descriptions':'/plugins/descriptions',
                                 'policy_preferences_list':'/preferences/list',
-                                'policy_list':'/policy/list',
+                                'policy_list':'/policy/list/policy',
                                 'policy_delete':'/policy/delete',
                                 'policy_copy':'/policy/copy',
                                 'policy_add':'/policy/add',
