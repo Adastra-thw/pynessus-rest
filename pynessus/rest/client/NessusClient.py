@@ -588,7 +588,7 @@ class NessusClient:
         self.constructParamsAndHeaders(params={'report':reportUuid,
                                                'v1':v1,
                                                'v2':v2}, jsonFormat=jsonFormat)
-        content = self.requestNessus(self.url+self.nessusFunctions['report_chapter'], method=method)
+        content = self.requestNessus(self.url+self.nessusFunctions['report_file_download'], method=method)
         return content
 
     def reportFileImport(self, fileName, jsonFormat=True, method="POST"):
